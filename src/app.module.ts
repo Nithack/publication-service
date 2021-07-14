@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { PublicationsModule } from './publications/publications.module';
 
 @Module({
-  imports: [],
+  imports: [TypeOrmModule.forRoot(), PublicationsModule],
   controllers: [],
   providers: [],
 })
