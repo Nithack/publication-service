@@ -12,18 +12,21 @@ export class PublicationsService {
     @InjectRepository(Publication)
     private publicationRepository: Repository<Publication>,
   ) {}
-  async create(createPublicationDto: CreatePublicationDto) {
+  async create(
+    createPublicationDto: CreatePublicationDto,
+  ): Promise<ResponsePublicationDto> {
     try {
-      const newPublication = await this.publicationRepository.save(
-        createPublicationDto,
-      );
+      const newPublication = await this.publicationRepository.save({
+        ...createPublicationDto,
+      });
       return ResponsePublicationDto.factory(true, newPublication);
     } catch (error) {
-      return ResponsePublicationDto.factory(false, error.message);
+      console.log(error);
+      return ResponsePublicationDto.factory(false, error);
     }
   }
 
-  async findAll() {
+  async findAll(): Promise<ResponsePublicationDto> {
     try {
       const findPublications = await this.publicationRepository.find();
       return ResponsePublicationDto.factory(true, findPublications);
@@ -32,11 +35,11 @@ export class PublicationsService {
     }
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<ResponsePublicationDto> {
     try {
-      const findPublication = await this.publicationRepository.findOne({
-        uuid: id,
-      });
+      console.log(id);
+
+      const findPublication = await this.publicationRepository.findOne(id);
       if (!findPublication)
         return ResponsePublicationDto.factory(true, 'Publication not found');
       return ResponsePublicationDto.factory(true, findPublication);
@@ -45,11 +48,12 @@ export class PublicationsService {
     }
   }
 
-  async update(id: string, updatePublicationDto: UpdatePublicationDto) {
+  async update(
+    id: string,
+    updatePublicationDto: UpdatePublicationDto,
+  ): Promise<ResponsePublicationDto> {
     try {
-      const findPublication = await this.publicationRepository.findOne({
-        uuid: id,
-      });
+      const findPublication = await this.publicationRepository.findOne(id);
       if (!findPublication)
         return ResponsePublicationDto.factory(false, 'Publication not found');
       Object.assign(findPublication, updatePublicationDto);
@@ -62,7 +66,7 @@ export class PublicationsService {
     }
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<ResponsePublicationDto> {
     try {
       await this.publicationRepository.delete({ uuid: id });
       return ResponsePublicationDto.factory(true, 'no data');
