@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Connection } from 'typeorm';
 import { PublicationsModule } from './publications/publications.module';
 
 @Module({
@@ -7,4 +8,6 @@ import { PublicationsModule } from './publications/publications.module';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private connection: Connection) {}
+}
